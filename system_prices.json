@@ -1,0 +1,58 @@
+[
+    {
+        "size": "6.6",
+        "quality": "value",
+        "inverter-brand": "Sungrow",
+        "panels-brand": "Jinko or Trina",
+        "cost": "10000"
+    },
+    {
+        "size": "6.6",
+        "quality": "premium",
+        "inverter-brand": "Fronius",
+        "panels-brand": "Sunpower, LG",
+        "cost": "15000"
+    },
+    {
+        "size": "10",
+        "quality": "value",
+        "inverter-brand": "Sungrow",
+        "panels-brand": "Jinko",
+        "cost": "1200"
+    },
+    {
+        "size": "10",
+        "quality": "premium",
+        "inverter-brand": "Fronius",
+        "panels-brand": "Sunpower, LG",
+        "cost": "17000"
+    },
+    {
+        "size": "15",
+        "quality": "value",
+        "inverter-brand": "Sungrow",
+        "panels-brand": "Jinko",
+        "cost": "15000"
+    },
+    {
+        "size": "15",
+        "quality": "premium",
+        "inverter-brand": "Fronius",
+        "panels-brand": "Sunpower, LG",
+        "cost": "20000"
+    },
+    {
+        "size": "20",
+        "quality": "value",
+        "inverter-brand": "Sungrow",
+        "panels-brand": "Jinko",
+        "cost": "25000"
+    },
+    {
+        "size": "20",
+        "quality": "value",
+        "inverter-brand": "Fronius",
+        "panels-brand": "Sunpower, LG",
+        "cost": "30000"
+    }
+]
