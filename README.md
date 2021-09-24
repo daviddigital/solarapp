@@ -79,7 +79,7 @@ The cost of the system is made up of the following components.
 
 A JSON file will contain eight different system costs based on the quality input value (value for money or premium), and the size input value (6.6kW, 10kW, 15kW, 20kW)
 
-## A rebate amount, based on small-scale technology certificates (STCs)
+### A rebate amount, based on small-scale technology certificates (STCs)
 
 Per https://www.solargain.com.au/blog/everything-you-need-know-about-stcs STCs are calculated based on megawatt hours of renewable energy generated.
 
@@ -105,10 +105,13 @@ This Australian Energy Regulator report shows the average consumption of electri
 
 TBA - get price
 
-## 4. Ability to determine a return on investment, payback period and IRR of solar 
+## 4. Ability to determine a return on investment, payback period and IRR of solar based on inputs 
 
+# R9
+Do github projects,etc.
 
-
+# REFERENCES
+Todo need to do proper referenes 
 
 --- 
 CLASS Customer
