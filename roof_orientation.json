@@ -1,7 +1,27 @@
 [
-    { 
+    {
         "facing" : "N",
         "factor" : 1.05
+    },
+    {
+        "facing" : "NE",
+        "factor" : 1
+    },
+    {
+        "facing" : "E",
+        "factor" : 0.9
+    },
+    {
+        "facing" : "SE",
+        "factor" : 0.85
+    },
+    {
+        "facing" : "S",
+        "factor" : 0.8
+    },
+    {
+        "facing" : "SW",
+        "factor" : 0.85
     },
     {
         "facing" : "W",
@@ -12,19 +32,11 @@
         "factor" : 1
     },
     {
-        "facing" : "E",
-        "factor" : 0.9
-    },
-    {
-        "facing" : "NE",
-        "factor" : 1
+        "facing" : "NS",
+        "factor" : 0.85
     },
     {
         "facing" : "EW",
         "factor" : 0.9
-    },
-    {
-       "facing" : "S",
-       "factor" : 0.80
     }
 ]

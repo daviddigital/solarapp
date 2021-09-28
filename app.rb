@@ -1,4 +1,5 @@
 require 'json'
+require 'tty-prompt'
 # require 'rainbow' todo
 
 # new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
@@ -68,6 +69,17 @@ class Quote
 
     def payback_period()
         return (@system.get_system_cost() - rebate_amount())/(@property.current_bill()[1] - bill_after_solar())
+    end
+
+    def output()
+        prompt = TTY::Prompt.new
+        prompt.ok "Your solar system"
+        prompt.ok "Solar system cost: $#{system.get_system_cost()}"
+        prompt.ok "Solar system rebate: $#{rebate_amount()}"
+        prompt.ok "Solar system output: #{get_system_output()} kwh"
+        prompt.ok "Solar system current bill: #{@property.current_bill()} (kwh / $)"
+        prompt.ok "Solar system bill after solar: #{bill_after_solar()}"
+        prompt.ok "Payback period: #{payback_period}"
     end
 end
 
