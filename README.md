@@ -109,9 +109,9 @@ TBA - get price
 
 TODO - need to add a bit more for the higher quality system, like 5% 
 
-## 5. Ability to determine a return on investment, payback period and IRR of solar based on inputs 
+## 5. Ability to determine a return on investment and payback period of a selected solar system size based on inputs
 
-## Optional - a json time stamped log of all quotes
+## Optional - a csv time stamped log of all quotes
 
 # R9
 Do github projects,etc.

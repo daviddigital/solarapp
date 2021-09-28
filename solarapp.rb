@@ -22,7 +22,7 @@ p result
 
 # create an instance of Quote
 
-new_quote = Quote.new(result[:postcode], 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
+new_quote = Quote.new(result[:postcode], result[:power], 6, "N", true, 6.6, "value", 0.20, 2021)
 prompt.ok "Your solar system"
 prompt.ok "Solar system cost: $#{new_quote.system.get_system_cost()}"
 prompt.ok "Solar system rebate: $#{new_quote.rebate_amount()}"
@@ -30,3 +30,7 @@ prompt.ok "Solar system output: #{new_quote.get_system_output()} kwh"
 prompt.ok "Solar system current bill: #{new_quote.property.current_bill()} (kwh / $)"
 prompt.ok "Solar system bill after solar: #{new_quote.bill_after_solar()}"
 prompt.ok "Payback period: #{new_quote.payback_period}"
+
+# Add an option to log to a csv
+
+# Add a message to prompt with a link to gihub readme anchor on list of assumptions for data
