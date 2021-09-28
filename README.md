@@ -105,13 +105,30 @@ This Australian Energy Regulator report shows the average consumption of electri
 
 TBA - get price
 
-## 4. Ability to determine a return on investment, payback period and IRR of solar based on inputs 
+## 4. Ability to determine the amount of amount of solar credits and usage saving based on the input of a solar system size
+
+TODO - need to add a bit more for the higher quality system, like 5% 
+
+## 5. Ability to determine a return on investment, payback period and IRR of solar based on inputs 
+
+## Optional - a json time stamped log of all quotes
 
 # R9
 Do github projects,etc.
 
 # REFERENCES
-Todo need to do proper referenes 
+
+Daily kwh per kw installed https://support.solarquotes.com.au/hc/en-us/articles/ 115002395494-What-can-I-expect-my-solar-system-to-produce-on-average-per-day-
+
+Consumption per household 
+https://www.lgenergy.com.au/faq/buying-a-solar-system/what-is-the-consumption-in-kwh-for-a-typical-australian-home
+
+Consumption for pool 
+https://www.canstarblue.com.au/electricity/how-much-energy-does-a-swimming-pool-use/
+
+Roof orientation: 
+https://www.solarquotes.com.au/panels/direction/ 
+
 
 --- 
 CLASS Customer

@@ -1,0 +1,62 @@
+[
+    {
+        "household" : 1,
+        "pool" : false,
+        "consumption": 12.30
+    },
+    {
+        "household" : 1,
+        "pool" : true,
+        "consumption": 19.30
+    },
+    {
+        "household" : 2,
+        "pool" : false,
+        "consumption": 15.40
+    },
+    {
+        "household" : 2,
+        "pool" : true,
+        "consumption": 22.40
+    },
+    {
+        "household" : 3,
+        "pool" : false,
+        "consumption": 18.40
+    },
+    {
+        "household" : 3,
+        "pool" : true,
+        "consumption": 25.40
+    },
+    {
+        "household" : 4,
+        "pool" : false,
+        "consumption": 21.50
+    },
+    {
+        "household" : 4,
+        "pool" : true,
+        "consumption": 28.50
+    },
+    {
+        "household" : 5,
+        "pool" : false,
+        "consumption": 24.50
+    },
+    {
+        "household" : 5,
+        "pool" : true,
+        "consumption": 31.50
+    },
+    {
+        "household" : 6,
+        "pool" : false,
+        "consumption": 27.60
+    },
+    {
+        "household" : 6,
+        "pool" : true,
+        "consumption": 34.60
+    }
+]

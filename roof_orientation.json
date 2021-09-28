@@ -1,0 +1,30 @@
+[
+    { 
+        "facing" : "N",
+        "factor" : 1
+    },
+    {
+        "facing" : "W",
+        "factor" : 0.85
+    },
+    {
+        "facing" : "NW",
+        "factor" : 0.95
+    }
+    {
+        "facing" : "E",
+        "factor" : 0.85
+    },
+    {
+        "facing" : "NE",
+        "factor" : 0.95
+    },
+    {
+        "facing" : "EW",
+        "factor" : 0.85
+    },
+    {
+       "facing" : "S",
+       "factor" : 0.80
+    }
+]

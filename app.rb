@@ -6,7 +6,7 @@ class Quote
 
     #end date of rebate
     ENDDATE = 2031 
-
+    STC_PRICE = 40 
     def initialize(postcode, power_type, household_size, roof_orientation, pool, 
         size, quality, feed_in_tarrif, installation_year, usage_cost)
         @property = Property.new(postcode, power_type, household_size, roof_orientation, pool)
@@ -19,10 +19,9 @@ class Quote
     # 2031 is the year the scheme ends
 
     def rebate_amount()
-        rebate_postcode = rebate_postcode(4000) #todo just hardcoded
-        p rebate_postcode
-        rebate_amount = @system.size * rebate_postcode[:rating] * (ENDDATE - @system.installation_year)
-        p rebate_amount
+        rebate_postcode = rebate_postcode(@property.postcode)
+        stcs = (@system.size * rebate_postcode[:rating] * (ENDDATE - @system.installation_year)).round
+        return stcs * STC_PRICE
     end
 
     def rebate_postcode(postcode)
@@ -36,9 +35,28 @@ class Quote
         end
         return hash
     end
+
+    def orientation_factor()
+        parsed = JSON.load_file('roof_orientation.json')
+
+    def get_system_output()
+        postcode_zone = rebate_postcode(@property.postcode)[:zone]
+        output = 0
+        parsed = JSON.load_file('zones_to_production', symbolize_names: true)
+        parsed.each do |zone|
+            if zone == postcode_zone
+                output = zone[:kwh] * 386 * 
+
+        case zone
+        when 1
+            out = 365 * 
+        
+    end 
 end
 
 class Property
+    attr_reader :postcode
+
     def initialize(postcode, power_type, household_size, roof_orientation, pool)
         @postcode = postcode
         @power_type = power_type
@@ -49,6 +67,8 @@ class Property
 end
 
 class SolarSystem
+    attr_reader :size, :installation_year
+
     def initialize(size, quality, feed_in_tarrif, installation_year)
         @size = size
         @quality = quality
@@ -66,16 +86,18 @@ class SolarSystem
         end
         return cost
     end
-    
-    
 end
 
 class CurrentBill
     def initialize(usage_cost)
         @usage_cost = usage_cost
     end
+
+    def get_average_usage
+    end 
 end
 
 new_quote = Quote.new(4000, "single-phase", 2, "N", false, 10, "value", 0.20, 2021, 0.24)
-p new_quote.system.get_system_cost()
-new_quote.rebate_amount()
+p "Solar system cost: #{new_quote.system.get_system_cost()}"
+p "Solar system rebate: #{new_quote.rebate_amount()}"
+p "Solar system output: #{new_quote.get_system_output()}"
