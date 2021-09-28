@@ -9,6 +9,7 @@ def menu()
         key(:postcode).ask("What's your postcode?", convert: :int)
         key(:power).ask("What's your current power cost per kwh?", value: "0.24", convert: :float)
         key(:family).select("What's your household size?", %w(1 2 3 4 5 5+))
+        
         key(:orientation).select("Whats the main roof orientation where the solar panels will be located?") do |menu|
             menu.choice name: "North", value: "N"
             menu.choice name: "North-East", value: "NE"
