@@ -2,16 +2,15 @@ require 'json'
 # require 'rainbow' todo
 
 class Quote
-    attr_reader :system
+    attr_reader :system, :property
 
     #end date of rebate
     ENDDATE = 2031 
     STC_PRICE = 40 
-    def initialize(postcode, power_type, household_size, roof_orientation, pool, 
-        size, quality, feed_in_tarrif, installation_year, usage_cost)
-        @property = Property.new(postcode, power_type, household_size, roof_orientation, pool)
+    def initialize(postcode, power_type, power_cost, household_size, roof_orientation, pool, 
+        size, quality, feed_in_tarrif, installation_year)
+        @property = Property.new(postcode, power_type, power_cost, household_size, roof_orientation, pool)
         @system = SolarSystem.new(size, quality, feed_in_tarrif, installation_year)
-        @current_bill = CurrentBill.new(usage_cost)
     end
 
     # Example rebate: A 10kW system in postcode 4000 installed in 2020
@@ -37,67 +36,86 @@ class Quote
     end
 
     def orientation_factor()
-        parsed = JSON.load_file('roof_orientation.json')
+        parsed = JSON.load_file('roof_orientation.json', symbolize_names: true)
+        parsed.each do |orientation|
+            if orientation[:facing] == @property.roof_orientation
+                return orientation[:factor]
+            end
+        end
+    end
 
     def get_system_output()
         postcode_zone = rebate_postcode(@property.postcode)[:zone]
-        output = 0
-        parsed = JSON.load_file('zones_to_production', symbolize_names: true)
+        parsed = JSON.load_file('zones_to_production.json', symbolize_names: true)
         parsed.each do |zone|
-            if zone == postcode_zone
-                output = zone[:kwh] * 386 * 
+            if zone[:zone] == postcode_zone
+                return zone[:kwh] * 365 * orientation_factor() * @system.size
+            end
+        end
+    end
 
-        case zone
-        when 1
-            out = 365 * 
-        
-    end 
+    def bill_after_solar()
+        current_bill_usage = @property.current_bill()[0]
+        system_output = get_system_output()
+        if system_output > current_bill_usage
+            return [(@property.current_bill()[1] - system_output * @property.power_cost) + ((system_output - current_bill_usage) * @system.feed_in_tarrif), ((system_output - current_bill_usage) * @system.feed_in_tarrif)]
+        else 
+            return @property.current_bill()[1] - system_output * @property.power_cost
+        end
+    end
 end
 
 class Property
-    attr_reader :postcode
+    attr_reader :postcode, :roof_orientation, :power_cost
 
-    def initialize(postcode, power_type, household_size, roof_orientation, pool)
+    def initialize(postcode, power_type, power_cost, household_size, roof_orientation, pool)
         @postcode = postcode
         @power_type = power_type
+        @power_cost = power_cost
         @household_size = household_size
         @roof_orientation = roof_orientation
         @pool = pool
     end
+
+    def current_bill()
+        # TODO, ENSURE 5+ is passed as 6 from menu
+        
+        annual_consumption = 0
+        parsed = JSON.load_file('consumption_by_household.json', symbolize_names: true)
+        parsed.each do |household|
+            if household[:household] == @household_size && household[:pool] == @pool
+                annual_consumption = household[:consumption] * 365
+                return [annual_consumption, annual_consumption * @power_cost]
+            end 
+        end
+    end
 end
 
 class SolarSystem
-    attr_reader :size, :installation_year
+    attr_reader :size, :installation_year, :feed_in_tarrif
 
     def initialize(size, quality, feed_in_tarrif, installation_year)
         @size = size
         @quality = quality
         @feed_in_tarrif = feed_in_tarrif
-        @installation_year = installation_year 
+        @installation_year = installation_year
     end
 
     def get_system_cost()
         parsed = JSON.load_file('system_prices.json', symbolize_names: true)
-        cost = 0.0
         parsed.each do |system|
             if system[:quality] == @quality && system[:size].to_f == @size.to_f
-                cost = system[:cost].to_f
+                return system[:cost].to_f
             end
         end
-        return cost
     end
 end
 
-class CurrentBill
-    def initialize(usage_cost)
-        @usage_cost = usage_cost
-    end
 
-    def get_average_usage
-    end 
-end
-
-new_quote = Quote.new(4000, "single-phase", 2, "N", false, 10, "value", 0.20, 2021, 0.24)
-p "Solar system cost: #{new_quote.system.get_system_cost()}"
-p "Solar system rebate: #{new_quote.rebate_amount()}"
-p "Solar system output: #{new_quote.get_system_output()}"
+new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
+p "Solar system cost: $#{new_quote.system.get_system_cost()}"
+p "Solar system rebate: $#{new_quote.rebate_amount()}"
+p "Solar system output: #{new_quote.get_system_output()} kwh "
+p "Solar system current bill: #{new_quote.property.current_bill()} (kwh / $) "
+p "Solar system bill after solar: #{new_quote.bill_after_solar()}"
+p "Payback period: #{(new_quote.system.get_system_cost() - new_quote.rebate_amount())/(new_quote.property.current_bill()[1] - new_quote.bill_after_solar())} years"

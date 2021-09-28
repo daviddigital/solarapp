@@ -1,27 +1,27 @@
 [
     { 
         "facing" : "N",
-        "factor" : 1
+        "factor" : 1.05
     },
     {
         "facing" : "W",
-        "factor" : 0.85
+        "factor" : 0.9
     },
     {
         "facing" : "NW",
-        "factor" : 0.95
-    }
+        "factor" : 1
+    },
     {
         "facing" : "E",
-        "factor" : 0.85
+        "factor" : 0.9
     },
     {
         "facing" : "NE",
-        "factor" : 0.95
+        "factor" : 1
     },
     {
         "facing" : "EW",
-        "factor" : 0.85
+        "factor" : 0.9
     },
     {
        "facing" : "S",
