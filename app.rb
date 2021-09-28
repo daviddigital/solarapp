@@ -1,15 +1,17 @@
 require 'json'
 # require 'rainbow' todo
 
+# new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
+
 class Quote
     attr_reader :system, :property
 
     #end date of rebate
     ENDDATE = 2031 
     STC_PRICE = 40 
-    def initialize(postcode, power_type, power_cost, household_size, roof_orientation, pool, 
+    def initialize(postcode, power_cost, household_size, roof_orientation, pool, 
         size, quality, feed_in_tarrif, installation_year)
-        @property = Property.new(postcode, power_type, power_cost, household_size, roof_orientation, pool)
+        @property = Property.new(postcode, power_cost, household_size, roof_orientation, pool)
         @system = SolarSystem.new(size, quality, feed_in_tarrif, installation_year)
     end
 
@@ -63,14 +65,17 @@ class Quote
             return @property.current_bill()[1] - system_output * @property.power_cost
         end
     end
+
+    def payback_period()
+        return (@system.get_system_cost() - rebate_amount())/(@property.current_bill()[1] - bill_after_solar())
+    end
 end
 
 class Property
     attr_reader :postcode, :roof_orientation, :power_cost
 
-    def initialize(postcode, power_type, power_cost, household_size, roof_orientation, pool)
+    def initialize(postcode, power_cost, household_size, roof_orientation, pool)
         @postcode = postcode
-        @power_type = power_type
         @power_cost = power_cost
         @household_size = household_size
         @roof_orientation = roof_orientation
@@ -112,10 +117,10 @@ class SolarSystem
 end
 
 
-new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
-p "Solar system cost: $#{new_quote.system.get_system_cost()}"
-p "Solar system rebate: $#{new_quote.rebate_amount()}"
-p "Solar system output: #{new_quote.get_system_output()} kwh "
-p "Solar system current bill: #{new_quote.property.current_bill()} (kwh / $) "
-p "Solar system bill after solar: #{new_quote.bill_after_solar()}"
-p "Payback period: #{(new_quote.system.get_system_cost() - new_quote.rebate_amount())/(new_quote.property.current_bill()[1] - new_quote.bill_after_solar())} years"
+# new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
+# p "Solar system cost: $#{new_quote.system.get_system_cost()}"
+# p "Solar system rebate: $#{new_quote.rebate_amount()}"
+# p "Solar system output: #{new_quote.get_system_output()} kwh "
+# p "Solar system current bill: #{new_quote.property.current_bill()} (kwh / $) "
+# p "Solar system bill after solar: #{new_quote.bill_after_solar()}"
+# p "Payback period: #{new_quote.payback_period}"
