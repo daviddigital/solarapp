@@ -129,6 +129,8 @@ https://www.canstarblue.com.au/electricity/how-much-energy-does-a-swimming-pool-
 Roof orientation: 
 https://www.solarquotes.com.au/panels/direction/ 
 
+Average power cost of $0.34 per kWh in Austrlalia
+https://electricitywizard.com.au/electricity/electricity-cost/how-much-does-electricity-cost/ 
 
 --- 
 CLASS Customer

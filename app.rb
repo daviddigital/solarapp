@@ -1,5 +1,8 @@
 require 'json'
 require 'tty-prompt'
+require 'tty-table'
+require 'pastel'
+
 # require 'rainbow' todo
 
 # new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
@@ -52,39 +55,74 @@ class Quote
         parsed = JSON.load_file('zones_to_production.json', symbolize_names: true)
         parsed.each do |zone|
             if zone[:zone] == postcode_zone
-                return zone[:kwh] * 365 * orientation_factor() * @system.size
+                return zone[:kwh] * 365 * orientation_factor() * @system.size / 12
             end
         end
     end
 
     def bill_after_solar()
-        current_bill_usage = @property.current_bill()[0]
+        current_bill_usage = @property.current_bill()[:consumption]
         system_output = get_system_output()
         if system_output > current_bill_usage
-            return [(@property.current_bill()[1] - system_output * @property.power_cost) + ((system_output - current_bill_usage) * @system.feed_in_tarrif), ((system_output - current_bill_usage) * @system.feed_in_tarrif)]
+            new_bill = -((system_output - current_bill_usage) * @system.feed_in_tarrif)
+            return {:credit => true, :newbill => new_bill}
         else 
-            return @property.current_bill()[1] - system_output * @property.power_cost
+            new_bill = @property.current_bill()[:bill] - system_output * @property.power_cost
+            return {:credit => false, :newbill => new_bill}
         end
     end
 
+    def system_cost_after_rebate()
+        @system.get_system_cost()[:cost].to_f - rebate_amount()
+    end
+
     def payback_period()
-        return (@system.get_system_cost() - rebate_amount())/(@property.current_bill()[1] - bill_after_solar())
+        cost = system_cost_after_rebate()
+        yearly_benefit = (@property.current_bill()[:bill] * 12) - (bill_after_solar()[:newbill] * 12)
+        return cost / yearly_benefit
     end
 
     def output()
-        prompt = TTY::Prompt.new
-        prompt.ok "Your solar system"
-        prompt.ok "Solar system cost: $#{system.get_system_cost()}"
-        prompt.ok "Solar system rebate: $#{rebate_amount()}"
-        prompt.ok "Solar system output: #{get_system_output()} kwh"
-        prompt.ok "Solar system current bill: #{@property.current_bill()} (kwh / $)"
-        prompt.ok "Solar system bill after solar: #{bill_after_solar()}"
-        prompt.ok "Payback period: #{payback_period}"
+        # prompt.ok "Payback period: #{payback_period()}"  Array can't be coerced into Float (TypeError) 
+
+        property_table_data = 
+        [
+            ["Postcode", "#{@property.postcode}"],
+            ["Household size", "#{@property.household_size}"],
+            ["Pool", "#{(@property.pool ? "Yes" : "No")}"],
+            ["Roof orientation", "#{@property.roof_orientation}"]
+        ]
+
+        system_table_data =
+        [
+            ["Category", "#{@system.quality}"],
+            ["System size", "#{@system.size}kW"],
+            ["Solar panels", "#{system.get_system_cost()[:"panels-brand"]}"],
+            ["Solar Inverter", "#{system.get_system_cost()[:"inverter-brand"]}"],
+            ["Other", "CEC Accredited installer"]
+        ]
+        costs_table_data =
+        [
+            ["Upfront installation costs", "$#{'%.2f' % system_cost_after_rebate()} (after rebate)"],
+            ["Monthly Bill (before solar)", "$#{'%.2f' % @property.current_bill()[:bill]}"],
+            ["Monthly Bill (after solar)", "$#{'%.2f' % bill_after_solar()[:newbill]} #{(bill_after_solar()[:credit] ? "(CREDIT)" : "")}"], 
+            ["Payback period", "#{'%.2f' % payback_period()} years"]
+        ]
+        property_table = TTY::Table.new(property_table_data)
+        system_table = TTY::Table.new(system_table_data)
+        costs_table = TTY::Table.new(costs_table_data)
+        pastel = Pastel.new
+        puts pastel.green("Property Details")
+        puts property_table.render(:ascii)
+        puts pastel.green("Solar System Details")
+        puts system_table.render(:ascii)
+        puts pastel.green("Costs and Benefits")
+        puts costs_table.render(:ascii)
     end
 end
 
 class Property
-    attr_reader :postcode, :roof_orientation, :power_cost
+    attr_reader :postcode, :power_cost, :household_size, :roof_orientation, :pool
 
     def initialize(postcode, power_cost, household_size, roof_orientation, pool)
         @postcode = postcode
@@ -95,21 +133,20 @@ class Property
     end
 
     def current_bill()
-        # TODO, ENSURE 5+ is passed as 6 from menu
-        
         annual_consumption = 0
         parsed = JSON.load_file('consumption_by_household.json', symbolize_names: true)
         parsed.each do |household|
             if household[:household] == @household_size && household[:pool] == @pool
-                annual_consumption = household[:consumption] * 365
-                return [annual_consumption, annual_consumption * @power_cost]
+                consumption = household[:consumption] * 365 / 12
+                bill = consumption * @power_cost
+                return {:consumption => consumption, :bill => bill}
             end 
         end
     end
 end
 
 class SolarSystem
-    attr_reader :size, :installation_year, :feed_in_tarrif
+    attr_reader :size, :installation_year, :feed_in_tarrif, :quality
 
     def initialize(size, quality, feed_in_tarrif, installation_year)
         @size = size
@@ -122,17 +159,8 @@ class SolarSystem
         parsed = JSON.load_file('system_prices.json', symbolize_names: true)
         parsed.each do |system|
             if system[:quality] == @quality && system[:size].to_f == @size.to_f
-                return system[:cost].to_f
+                return system #[:cost].to_f
             end
         end
     end
 end
-
-
-# new_quote = Quote.new(4000, "single-phase", 0.24, 6, "N", true, 6.6, "value", 0.20, 2021)
-# p "Solar system cost: $#{new_quote.system.get_system_cost()}"
-# p "Solar system rebate: $#{new_quote.rebate_amount()}"
-# p "Solar system output: #{new_quote.get_system_output()} kwh "
-# p "Solar system current bill: #{new_quote.property.current_bill()} (kwh / $) "
-# p "Solar system bill after solar: #{new_quote.bill_after_solar()}"
-# p "Payback period: #{new_quote.payback_period}"
