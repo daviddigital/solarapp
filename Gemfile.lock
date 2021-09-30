@@ -30,6 +30,7 @@ PLATFORMS
   arm64-darwin-20
 
 DEPENDENCIES
+  pastel
   tty-prompt
   tty-table
 
