@@ -8,7 +8,7 @@ Run the below script to install dependencies and run the app.
 
 ## Overview
 
-![alt text](./resources/output.png "A picture is worth 1,000 words")
+![alt text](./resources/output.jpg "A picture is worth 1,000 words")
 
 Solar App is an a command line application that users can use to find out the costs and benefits of installing solar panels in Australia.
 
