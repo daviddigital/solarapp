@@ -1,3 +1,9 @@
+# Installation
+
+Run the below script to install dependencies and run the app.
+
+` run_app.sh `
+
 # Statement of purpose and scope
 
 ## Overview

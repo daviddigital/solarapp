@@ -42,7 +42,7 @@ class Menu
                 menu.choice name: "Yes", value: true
             end
 
-            key(:size).select("\nWhat size system are you interested in? \nGenerally, bigger is better as the rebate is based on the solar panel output.") do |menu|
+            key(:size).select("\nWhat size system are you interested in? \nGenerally, a larger system is recommended as the rebate is based on the solar panel output.") do |menu|
                 menu.choice name: "6.6kW - recommended for small or medium roofs", value: 6.6
                 menu.choice name: "10kW - recommended for large roofs with ~48.6m2 of space for panels", value: 10
                 menu.choice name: "15kW - recommended for very large roofs (73m2+ available space) and high energy bills", value: 15
