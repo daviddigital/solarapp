@@ -172,3 +172,8 @@ Use a gem (tty)
 Use json fil
 Use tty graph 
 Use API
+
+HELP 
+Can add a command line argument when launching the app which will display the users name
+
+e.g. `ruby solarapp.rb "David Watts"`
