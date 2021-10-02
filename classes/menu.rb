@@ -4,7 +4,9 @@ require 'tty-table'
 require 'pastel'
 require 'tty-progressbar'
 
+# The menu for entering details for getting a quote 
 class Menu
+    # Display a welcome message (with a command line argument if provided), and ascii art logo
     def welcome()
         prompt = TTY::Prompt.new
         pastel = Pastel.new
@@ -14,6 +16,10 @@ class Menu
         prompt.ok("Welcome to Solar App#{name ? (" " +name) : ""}! Press Control + C to quit at any time.")
         puts " "
     end
+    
+    # Display a menu for entering quote details
+    # Validate input to ensure it works with the Quote initialize method 
+    # Provide select options and "I'm not sure" to be user friendly 
 
     def menu()
         prompt = TTY::Prompt.new
@@ -66,13 +72,16 @@ class Menu
                 key(:fit).ask("\nWhat feed in tarrif (exporting power to the grid) is available to you from your energy retailer? Australia's average is $0.12:", value: "0.12", convert: :float, required: true)
                 key(:install_year).ask("\nWhat year will the panels be installed?", value: "#{Time.new.year }", convert: :int, required: true)
             end
+        # If the user presses ctrl + c to exit (as per welcome message) it throws interrupt error   
         rescue Interrupt
             puts "\You ended the program"
+        rescue 
+            puts "An error occured, please try again."
         end
         return result
     end
 
-    # Purpose is to ask the user if they'd like to perorm another quote
+    # Ask the user if they'd like to perform another quote
     def continue()
         prompt = TTY::Prompt.new
         prompt.yes?("What you like to calculate another solar quote?")

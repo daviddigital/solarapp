@@ -7,11 +7,15 @@ require_relative 'property'
 require_relative 'menu'
 require_relative 'solarsystem'
 
+# Build a quote based on the menu inputs for a property and system 
 class Quote
     attr_reader :system, :property
 
-    #end date of rebate
+    # End date of rebate as per Australian Energy Regulator
     ENDDATE = 2031 
+
+    # STC price as per Australian Energy Regulator, this doesn't change. 
+    # In relatity may be slightly less due to secondary market, but in ballpark 
     STC_PRICE = 40 
     def initialize(postcode, power_cost, household_size, roof_orientation, pool, 
         size, quality, feed_in_tarrif, installation_year)
@@ -19,10 +23,8 @@ class Quote
         @system = SolarSystem.new(size, quality, feed_in_tarrif, installation_year)
     end
 
-    # CALCULATION Example rebate: A 10kW system in postcode 4000 installed in 2020
-    # 10 * 1.382 * (2031-2021) = 138 STCs
-    # 2031 is the year the scheme ends
-
+    # Rebate is based on the postcode zones, which are linked in the file
+    # See quote_test.rb for an example rebate with workings
     def rebate_amount()
         begin
             rebate_postcode = rebate_postcode(@property.postcode)
@@ -34,6 +36,7 @@ class Quote
         return stcs * STC_PRICE
     end
 
+    # Find the correct zone to help the rebate_amount() method 
     def rebate_postcode(postcode)
         hash = {}
         parsed = JSON.load_file('postcodes_to_zones.json', symbolize_names: true)
@@ -51,6 +54,8 @@ class Quote
         return hash
     end
 
+    # North facing roofs will generate more power, South will provide the least
+    # This method retruns the factor, e.g. 105% for a north facing roof, 85% for south
     def orientation_factor()
         parsed = JSON.load_file('roof_orientation.json', symbolize_names: true)
         parsed.each do |orientation|
@@ -60,6 +65,9 @@ class Quote
         end
     end
 
+    # Gets the system output based on the postcode / zone 
+    # json file is daily so need to multiply by 365, add a factor for roof orientation and divide by 12
+    # to return monthly output (for determining monthly bill)
     def get_system_output()
         postcode_zone = rebate_postcode(@property.postcode)[:zone]
         parsed = JSON.load_file('zones_to_production.json', symbolize_names: true)
@@ -69,6 +77,9 @@ class Quote
             end
         end
     end
+
+    # Determines the monthly bill after solar, which includes the feed in tarrif (exporting power to grid)
+    # Also returns if the bill is in credit not for formatting in the table
 
     def bill_after_solar()
         current_bill_usage = @property.current_bill()[:consumption]
@@ -82,15 +93,20 @@ class Quote
         end
     end
 
+    # Finds the system cost after rebate by subtracting the rebate from the system cost, to be used in output table
+
     def system_cost_after_rebate()
-        @system.get_system_cost()[:cost].to_f - rebate_amount()
+        return @system.get_system_cost()[:cost].to_f - rebate_amount()
     end
 
+    # Payback period is how many years until the difference in bills pre/post solar equals the upfront cost
     def payback_period()
         cost = system_cost_after_rebate()
         yearly_benefit = (@property.current_bill()[:bill] * 12) - (bill_after_solar()[:newbill] * 12)
         return cost / yearly_benefit
     end
+
+    # Display the output from the quote using tty-table gem
 
     def output()
 
@@ -131,6 +147,7 @@ class Quote
     end
 
     # Display a loading bar with a fake load time
+    
     def output_loading()
         pastel = Pastel.new
         green = pastel.on_green(" ")
@@ -138,6 +155,7 @@ class Quote
         
         puts " "
         bar = TTY::ProgressBar.new("Preparing Quote [:bar]", 
+            bar_format: :box,
             total: 30,
             complete: green,
             incomplete: yellow
