@@ -1,8 +1,8 @@
 # Installation
 
-Run the below script to install dependencies and run the app.
+Download or clone the github code and then run the below script to install the gem dependencies and run the app.
 
-` ./run_app.sh `
+` bash run_app.sh `
 
 # Statement of purpose and scope
 
@@ -177,3 +177,79 @@ HELP
 Can add a command line argument when launching the app which will display the users name
 
 e.g. `ruby solarapp.rb "David Watts"`
+
+# Help 
+
+## Installation and Running Solar App
+
+Download or clone the github code and then run the below script to install the gem dependencies and run the app.
+
+` bash run_app.sh `
+
+Add your name or company name as a commmand line argument then running the app to get a personalised welcome message.
+
+e.g. 
+
+` ruby solarapp.rb "David"` 
+
+## Using Solar App and Solar Terminology
+
+Solar App is designed to be as simple as possible. Follow the prompts to find out the costs and benefits of solar.
+
+If you're unsure of what your power cost per kwH, feed in tarrif or system size you're after, just use the defaults which are Australian averages.
+
+A brief description of the questions asked and why they are asked is as follows:
+
+### Postcode
+
+The postcode is used to determine the rebate available to you, and how much power the panels are likely to produce (the two are related). A postzone to zone mapping is used by the app.
+
+As an example, a postcode in sunny Perth will have a higher output than Hobart, and attracts a higher rebate as well as cheaper bills (or more credits).
+
+### Current power cost per kWh
+
+What your current retailer is charging you per kWh, to determine the current solar bill / potential savings after solar installation.
+
+### Houshold size and whether a pool is at the property 
+
+The number of people in the household. This is used, in combination with whether a pool is at the property, to determine an estimated average monthly energy bill, without you needing to look at your last 12 power bills. 
+
+### Main roof orientation
+
+North roofs are best for solar, and South roofs are the worst. 
+
+This factor is used to determine the output of the solar system selected. For example a North roof will produce about 20% more than a South facing roof. 
+
+### Size of system
+
+The size of solar panels. Larger panels will provide a bigger rebate, and more energy savings or feed in tarrifs. 
+
+### Quality of system
+
+The quality of the panels and inverter.
+
+To make things simple we've broken up the categories into "value" and "premium".
+
+Solar App won't produce any increase in output for the premium brands over the value brands. Per a Choice & CSIRO study (https://www.choice.com.au/home-improvement/energy-saving/solar/articles/solar-panel-test-what-we-found), the cheaper Jinko panels from China kept up with the premium brands.
+
+Premium brands may however will provide longer warranties and better service.
+
+### Feed in tarrif
+
+Feed in tarrif is the price per kWh your energy retailer will provide for solar you feed back into the grid.
+
+It should be noted that different states have different rules, and not all of these rules have been built into Solar App.
+
+For example, in QLD only 10kW can be fed into the system on single phase power systems, but three phase power systems can go higher.
+
+Solar App will not impose any limits on amount fed into the grid, so should only be used as an initial desktop study. 
+
+### Installation year 
+
+The STC rebate will end in 2031, and the installation year is used to determine the amount of STCs your system will provide. Each year the STCs will drop, as they are projected out until 2031 from the installation year and claimed upfront by your solar retailer. 
+
+## Features 
+
+### Provide your name or company name when running the app
+
+
