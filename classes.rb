@@ -2,6 +2,7 @@ require 'json'
 require 'tty-prompt'
 require 'tty-table'
 require 'pastel'
+require 'tty-progressbar'
 
 class Menu
     def menu()
@@ -12,8 +13,8 @@ class Menu
         prompt.ok("Welcome to Solar App! Press Control + C to quit at any time.")
 
         result = prompt.collect do
-            key(:postcode).ask("What's your postcode?", convert: :int)
-            key(:power).ask("\nWhat's your current power cost per kwh? Australian average is $0.34:", value: "0.34", convert: :float)
+            key(:postcode).ask("What's your postcode?", convert: :int, required: true)
+            key(:power).ask("\nWhat's your current power cost per kwh? Australian average is $0.34:", value: "0.34", convert: :float, required: true)
             key(:family).select("\nWhat's your household size?") do |menu|
                 menu.choice name: "1", value: 1
                 menu.choice name: "2", value: 2
@@ -55,11 +56,16 @@ class Menu
                 menu.choice name: "Premium - premium brands with 15-20 year warranty and excellent service", value: "premium"
             end 
 
-            key(:fit).ask("\nWhat feed in tarrif (exporting power to the grid) is available to you from your energy retailer? 
-            This can range from $0.06 to $0.20 per kWh:\n", value: "0.12", convert: :float)
-            key(:install_year).ask("\nWhat year will the panels be installed?", value: "#{Time.new.year }", convert: :int)
+            key(:fit).ask("\nWhat feed in tarrif (exporting power to the grid) is available to you from your energy retailer? Australia's average is $0.12:", value: "0.12", convert: :float, required: true)
+            key(:install_year).ask("\nWhat year will the panels be installed?", value: "#{Time.new.year }", convert: :int, required: true)
         end
         return result
+    end
+
+    # Purpose is to ask the user if they'd like to perorm another quote
+    def continue()
+        prompt = TTY::Prompt.new
+        prompt.yes?("What you like to calculate another solar quote?")
     end
 end
 
@@ -75,7 +81,7 @@ class Quote
         @system = SolarSystem.new(size, quality, feed_in_tarrif, installation_year)
     end
 
-    # Example rebate: A 10kW system in postcode 4000 installed in 2020
+    # CALCULATION Example rebate: A 10kW system in postcode 4000 installed in 2020
     # 10 * 1.382 * (2031-2021) = 138 STCs
     # 2031 is the year the scheme ends
 
@@ -166,14 +172,35 @@ class Quote
         property_table = TTY::Table.new(property_table_data)
         system_table = TTY::Table.new(system_table_data)
         costs_table = TTY::Table.new(costs_table_data)
+        output_loading()
         pastel = Pastel.new
-        puts pastel.magenta("RESULTS")
         puts pastel.green("Property Details")
         puts property_table.render(:ascii)
         puts pastel.green("Solar System Details")
         puts system_table.render(:ascii)
         puts pastel.green("Costs and Benefits")
         puts costs_table.render(:ascii)
+    end
+
+    # Display a loading bar  
+    def output_loading()
+        pastel = Pastel.new
+        green = pastel.on_green(" ")
+        yellow = pastel.on_yellow(" ")
+        
+        puts " "
+        bar = TTY::ProgressBar.new("Preparing Quote [:bar]", 
+            total: 30,
+            complete: green,
+            incomplete: yellow
+        )
+        30.times do
+            sleep(0.05)
+            bar.advance
+        end
+        puts " "
+        puts pastel.magenta("------RESULTS------")
+        puts " "
     end
 end
 

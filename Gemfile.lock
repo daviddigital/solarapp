@@ -10,6 +10,11 @@ GEM
     strings-ansi (0.2.0)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
+    tty-progressbar (0.18.2)
+      strings-ansi (~> 0.2)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.8)
+      unicode-display_width (>= 1.6, < 3.0)
     tty-prompt (0.23.1)
       pastel (~> 0.8)
       tty-reader (~> 0.8)
@@ -31,6 +36,7 @@ PLATFORMS
 
 DEPENDENCIES
   pastel
+  tty-progressbar
   tty-prompt
   tty-table
 
