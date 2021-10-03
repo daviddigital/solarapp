@@ -1,16 +1,16 @@
-# Installation
+# Repository 
 
-Download or clone the github code and then run the below script to install the gem dependencies and run the app.
+[Solar App](https://github.com/daviddigital/solarapp)
 
-` bash run_app.sh `
+# Software Development Plan
 
-# Statement of purpose and scope
+## Statement of purpose and scope
 
 ## Overview
 
 ![Solar app output](./resources/output.jpg "Solar app output")
 
-Solar App is an a command line application that users can use to find out the costs and benefits of installing solar panels in Australia.
+Solar App is a command line application that users can use to find out the costs and benefits of installing solar panels in Australia.
 
 The app will take an address and other input data such as power usage and solar power system size, and determine the costs and savings after any available rebates available in the user's state.
 
@@ -18,21 +18,19 @@ The app will take an address and other input data such as power usage and solar 
 
 The scope of this App is for residential users in Australia who are making use of solar/carbon credits available to them, known as small-scale certificates (STCs).
 
-Where available APIs will be used to determine current STC prices.
-
-The App will determine a high level estimate and will assume 
+Australian Energy Regulator data will be used along with average usage data. 
 
 ## Problem Statement
 
-Without Solar App it can be hard to determine whether a solar system is worth the investment, and what size solar system to install.
+It can be hard to determine whether a solar system is worth the investment, and what size solar system to install.
 
-Currently, individuals can reach out to installers for free quotes, but installers have an incentive to get the customer and some solar installers can be pushy.
+Currently, individuals can reach out to installers for free quotes, but installers have an incentive to sign the customer and some solar installers can be pushy.
 
-Online calculators exist for Solar but they can use confusing terminology and require a lot of input upfront like existing power bill information. 
+Online calculators exist for Solar but they can use confusing terminology and require a lot of input upfront like existing power bill information. Solar App is designed to be as user-friendly as possible, with only minimal data required and averages utilised from Government data.
 
 ## Target Audience
  
-The primary inteded user of the app are individuals interested in getting solar installed on their roof and want to perform a quick check as to whether the benefits outweigh the costs. A secondary user could be solar retailers who are preparing a quote for a client. 
+The primary intended user of the app are individuals interested in getting solar installed on their roof and want to perform a quick check as to whether the benefits outweigh the costs. A secondary user could be solar retailers who are preparing a quote for a client.
 
 ## Example Use Case
 
@@ -42,40 +40,37 @@ John runs Solar App, which prompts John for the following inputs:
 
 - What is the postcode of the property
 - What is the installation year (defaulted to current year)
-- Power: Single-Phase, Three-Phase or I don't know 
-- Number of people at the property: 1, 2, 3, 4, 5+
-- Solar System Size: 6.6kW, 10kW, 15kW, 20kW
-- Solar System Quality: Value for money, premium, or enter your own price
-- Main roof orientation (N, E, S, W) (optional )
-- Current monthly power bill (optional)
-- Current power cost (optional)
-- Feed In Tarrif (optional)
+- Number of people at the property
+- Solar System Size
+- Solar System Quality
+- Main roof orientation 
+- Current power cost
+- Feed In Tarif
 
 Solar App outputs the following to John:
 
 - The upfront cost for the solar system(s)
-- The benefits after one year, thee years, five years and ten years broken up as reduced bills as well as credits from feeding into the grid
-- Solar bill before and after solar
-- Assumptions used in the analysis  
+- Monthly power bill before and after solar
+- Payback period
+
+John is then presented with the option to calculate another quote, or exit the program. 
 
 # Features 
 
-## 1. Ability to enter information quote from a Menu
+## 1. Ability to enter information for a quote from a Menu
 
 Solar App will take the following inputs via a menu which will assist in determining the costs and benefit outputs. 
 
-1. Postcode
-2. Installation year (defaulted to current year)
-3. Power type (single phase or three phase)
-4. Number of people at the property
-5. Solar System Size
-6. Solar System Quality
-7. Main roof orientation 
-8. Current monthly power bill
-9. Current power cost
-10. Feed in tarrif 
+- What is the postcode of the property
+- What is the installation year (defaulted to current year)
+- Number of people at the property
+- Solar System Size
+- Solar System Quality
+- Main roof orientation 
+- Current power cost
+- Feed In Tariff
 
-Error checking will be utilised to ensure clean data is captured (e.g. valid postcodes, 4 numberical characters). 
+Error checking will be utilised to ensure clean data is captured, also single selects will be utilised rather than free-text input to reduce errors.
 
 ## 2. Ability to determine a solar system cost from inputs
 
@@ -103,7 +98,7 @@ $40 per STC, so 138 * $40 = $5520 rebate
 
 ## 3. Ability to determine a households energy costs from inputs
 
-Solar App will allow users to enter their current monthly power bill if that's available, but will also allow users just to enter the number of adults in their household for Solar App to determine a monthly cost based on averages.
+Solar App will allow users to enter the number of adults in their household for Solar App to determine a monthly cost based on averages.
 
 To determine the average cost based on household size and state, the following data will be utilised:
 
@@ -111,76 +106,242 @@ https://www.aer.gov.au/retail-markets/guidelines-reviews/electricity-and-gas-con
 
 This Australian Energy Regulator report shows the average consumption of electricity by zone. This will be converted into a JSON file as the AER does not have an API available.
 
-TBA - get price
+## 4. Ability to determine the bill before and after based on inputs
 
-## 4. Ability to determine the amount of amount of solar credits and usage saving based on the input of a solar system size
+The bill before solar will utilise the household average energy based on the number of adults and whether a pool is at the property, and then multiply by the current power cost entered by the user in the menu.
+
+The bill after solar will utilise the output rating based on zones at the postcode and multiply by the system size, and a roof orientation factor. If the amount is a surplus, a feed in tariff will be utilised to show the bill as a credit, as power is being exported to the grid. 
 
 
-## 5. Ability to determine a return on investment and payback period of a selected solar system size based on inputs
+## 5. Ability to determine a payback period of a selected solar system size based on inputs, output all information in table format 
+
+A payback period will be displayed to the user in a summary table along with system information and pre/post solar bills.
+
+The payback period is calculated as the upfront cost / yearly savings. Yearly savings are calculated as the bill before solar less the bill after solar.
+
+# Outline of the user interaction 
+
+## Installation and running the app
+Download or clone the github code and then run the below script to install the gem dependencies and run the app.
+
+` bash run_app.sh `
+
+Add your name or company name as a command line argument then running the app to get a personalised welcome message.
+
+e.g. 
+
+` ruby solarapp.rb "David"` 
+
+## Using and interacting with features 
+
+The user runs Solar App, which prompts the user for the following inputs:
+
+- What is the postcode of the property
+- What is the installation year (defaulted to current year)
+- Number of people at the property
+- Solar System Size
+- Solar System Quality
+- Main roof orientation 
+- Current power cost
+- Feed In Tariff
+
+Solar App outputs the following to the user in a table:
+
+- The upfront cost for the solar system(s)
+- Monthly power bill before and after solar
+- Payback period
+
+The user is then presented with the option to calculate another quote, or exit the program. 
+
+## Error handling
+
+For the inputs, only the postcode, installation year, power cost and feed in tariff take free-text input. The other inputs are all single select to reduce the possibiltiy of an error.
+
+For error handling on the free-text input, the type will be checked to match using the tty-prompt built-in validation, for example that power cost can resolve float. If the user enters a word "abc" in power cost, the prompt will let the user know that "abc" could not be converted into a float, and to try again.
+
+There is additional validation on the postcode once processing the output to ensure that it is available in the data range. If it's not available, the user will be given a message that the postcode was not available, and to try again. 
 
 # Control Flow Diagram
 
 ![Control Flow Diagram](./resources/solarappv4.png "Control Flow")
 
 # Implementation Plan
-A summary of the features and requirements are below, and also on the project kanban board https://github.com/daviddigital/solarapp/projects/1. 
-## Feature 1
 
-Summary
+A summary of the features and requirements are below, and also on the project kanban board https://github.com/daviddigital/solarapp/projects/1. 
+
+## Create Data Files 
+
+Convert all data sources (system prices, household consumption, and postcode to zones) to JSON format.
+
+Checklist
+- System prices JSON is created with each combination of size and quality (Priority: High)
+- Household consumption JSON is created with each combination of swimming pool & household size (5+ is converted to 6) (Priority: High)
+- Postcodes to zones is created (Priority: High)
+- All JSON files follow JSON with no errors (Priority: High)
+- Utilise test cases that access JSON data (Priority: High)
+
+## Ability to enter information for a quote from a Menu
+
+Initialise a menu, display a welcome message, and utilise tty prompt to capture all information required to generate a solar panel quote for the user.
+
+Ensure error checking is implemented.
+
+The information will be captured in a single hash to then use as an argument when initialising the Quote.
 
 Checklist:
-- (Priority: High)
+- Welcome message utilising command line arguments if provided (Priority: High)
+- User friendly tty-prompt to collect all data required for a quote in the correct data type (Priority: High)
+- Error checking/data validation on postcode, power cost, feed in tariff and installation year (Priority: High)
+- Single select option on all other menu questions (Priortiy: High)
+- Menu input data stored as a hash (Priority: High)
+- Option to perform another quote (Priority: Medium)
 
-# Testing Summary
+
+## Create a a new quote and determine a solar system cost from inputs
+
+Taking the user input from the menu, initiate a Quote (which also has a Property and SolarSystem class).
+
+On the Solar System class, enable the ability to determine the system cost based on the system prices json file.
+
+Checklist:
+- A Quote is initialised with input from menu (Priority: High)
+- A Property is initialised (Priority: High)
+- A SolarSystem is initialised (Priority: High)
+- Add the ability to determine system cost on the SolarSystem class using JSON data (Priority: High)
+- Add the ability to determine rebate about on the Quote class using JSON data (Priority: High)
+
+
+## Ability to determine a households energy costs and before bill from inputs
+
+Taking user input from the menu, use the number of adults at the property and whether the property has a pool to determine the household kWh.
+
+Multiply the kWh by the provided power costs to determine the current monthly bill. 
+
+Checklist:
+- Implement type conversion on inputs to match JSON file(Priority: High)
+- Use number of adults and pool to determine household kWh (Priority: High)
+- Create a method to pull the JSON data matching the user input (Priority: High)
+- Create method to calculate current bill using kWh * power cost (Priority: High)
+- Round to two decimal places (Priority: High)
+
+## Ability to determine the bill after solar based on inputs
+
+Taking input from the menu, use the system size, roof orientation and postcode code to determine the system output. 
+
+Checklist:
+- Implement type conversion on inputs to match JSON file (Priority: High)
+- Use number of system size, roof orientation and postcode to determine generation kWh (Priority: High)
+- Create a method to pull the JSON data matching the user input (Priority: High)
+- Create method to calculate after solar bill using system output less current bill method (Priority: High)
+- If there is excess (i.e. the bill will be a credit), calculate the credit using the feed in tarrif, return that the bill is in credit (Priority: High)
+
+
+## Ability to determine a payback period of a selected solar system size based on inputs, output all information in table format 
+
+Using the tty-progressbar and tty-table gems, display property, system and cost and benefit information in a table format. 
+
+Checklist:
+- Calculate payback period using upfront costs / yearly benefits (current bill less bill after solar)
+- Display a loading bar using tty-progressbar (Priority: High)
+- Display Property Details table using menu input (Priority: High)
+- Display Solar System details table using menu input (Priority: High)
+- Display system cost after rebate, bill before solar, bill after solar, payback period(Priority: High)
+- Ask the user if they'd like to (Priority: High)
+
+## Test
+
+Test all major features using unit tests. 
+
+Checklist:
+- Menu initialise (Priority: High)
+- Quote initialise (Priority: High)
+- Property initialise (Priority: High)
+- SolarSystem initialise (Priority: High)
+- Major methods on each class above (Priority: High)
+
+# Testing Outline
 
 Each class was run with unit tests covering major features.
 
-## Menu class 
+## Menu class (menu_test.rb)
+
+Test a menu can be initialised. 
 
 1 test, 1 assertion, 100% passed
 
-## Quote class
+## Quote class (quote_test.rb)
+
+Test a quote can be initialised and full coverage of methods that are calculating system costs (cost and rebate) and benefits (bill before and after, payback period).
 
 12 tests, 12 assertions, 100% passed
 
-## Property class
+## Property class (property_test.rb)
+
+Test a property can be initialised and full coverage of current bill method.
 
 7 tests, 7 assertions, 100% passed
 
-## Solar System class
+## Solar System class (solarsystem_test.rb)
 
-6 tests, 6 assertsions, 100% passed 
+Test a Solar System can be initialised and full coverage of generate sytem cost method.
+
+6 tests, 6 assertions, 100% passed 
 
 # References and data sources
 
-Daily kwh per kw installed https://support.solarquotes.com.au/hc/en-us/articles/ 115002395494-What-can-I-expect-my-solar-system-to-produce-on-average-per-day-
+Rebate calculation
 
-Consumption per household 
-https://www.lgenergy.com.au/faq/buying-a-solar-system/what-is-the-consumption-in-kwh-for-a-typical-australian-home
+CER. (2021, October 3). Postcode zone ratings and postcode zones for solar panel systems. Clean Energy Regulator. http://www.cleanenergyregulator.gov.au/DocumentAssets/Pages/Postcode-zone-ratings-and-postcode-zones-for-solar-panel-systems.aspx
 
-Consumption for pool 
-https://www.canstarblue.com.au/electricity/how-much-energy-does-a-swimming-pool-use/
+Daily kwh per kw installed
 
-Roof orientation: 
-https://www.solarquotes.com.au/panels/direction/ 
+Solar Quotes. (2021, September 9). What can I expect my solar system to produce, on average, per day? https://support.solarquotes.com.au/hc/en-us/articles/115002395494-What-can-I-expect-my-solar-system-to-produce-on-average-per-day-
 
-Average power cost of $0.34 per kWh in Austrlalia
-https://electricitywizard.com.au/electricity/electricity-cost/how-much-does-electricity-cost/ 
+Consumption per household
+
+LG. (n.d.). What is the consumption in kWh for a typical Australian home? LG Energy. Retrieved October 3, 2021, from https://www.lgenergy.com.au/faq/buying-a-solar-system/what-is-the-consumption-in-kwh-for-a-typical-australian-home
+
+Consumption for pool
+
+Astbury, H. (2021, May 1). Swimming pool electricity usage explained. Canstar Blue. https://www.canstarblue.com.au/electricity/how-much-energy-does-a-swimming-pool-use/
+
+Roof orientation factor
+
+SolarQuotes. (2021, March 26). Which Solar Panel Direction (Orientation) Is Best? https://www.solarquotes.com.au/panels/direction/
+
+Average power cost of $0.34 per kWh in Australia
+
+How Much Does Electricity Cost - Average Electricity Bill. (2021, June 23). Electricity Wizard. https://electricitywizard.com.au/electricity/electricity-cost/how-much-does-electricity-cost/
 
 
 # Help 
 
 ## Installation and Running Solar App
 
-Download or clone the github code and then run the below script to install the gem dependencies and run the app.
+Download or clone the github code and then run the below script to install the gem dependencies and run the app. 
 
 ` bash run_app.sh `
 
-Add your name or company name as a commmand line argument then running the app to get a personalised welcome message.
+You will need to set execute permission on the script file first using chmod command on Linux and Mac (this isn't required on Windows):
+
+` chmod +x run_app.sh `
+
+Add your name or company name as a command line argument when running the app to get a personalised welcome message.
 
 e.g. 
 
 ` ruby solarapp.rb "David"` 
+
+
+## Dependencies 
+
+The following dependencies will be installed when running the install script.
+
+[tty-prompt](https://github.com/piotrmurach/tty-prompt#ttyprompt-) 
+[tty-progressbar](https://github.com/piotrmurach/tty-progressbar#ttyprogressbar-)
+[tty-table](https://github.com/piotrmurach/tty-table#ttytable-)
+[pastel](https://github.com/piotrmurach/pastel)
+
 
 ## Using Solar App and Solar Terminology
 
@@ -200,7 +361,7 @@ As an example, a postcode in sunny Perth will have a higher output than Hobart, 
 
 What your current retailer is charging you per kWh, to determine the current solar bill / potential savings after solar installation.
 
-### Houshold size and whether a pool is at the property 
+### Household size and whether a pool is at the property 
 
 The number of people in the household. This is used, in combination with whether a pool is at the property, to determine an estimated average monthly energy bill, without you needing to look at your last 12 power bills. 
 
@@ -242,4 +403,4 @@ The STC rebate will end in 2031, and the installation year is used to determine 
 
 A system_prices.json has been provided for each combination of system size and quality.
 
-If you'd like to add more options they can be added dirrectly in the .json file. 
+If you'd like to add more options they can be added directly in the JSON file. 
