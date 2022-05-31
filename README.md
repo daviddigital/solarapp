@@ -1,11 +1,3 @@
-# Repository 
-
-[Solar App](https://github.com/daviddigital/solarapp)
-
-# Software Development Plan
-
-## Statement of purpose and scope
-
 ## Overview
 
 ![Solar app output](./resources/output.jpg "Solar app output")
@@ -13,6 +5,16 @@
 Solar App is a command line application that users can use to find out the costs and benefits of installing solar panels in Australia.
 
 The app will take an address and other input data such as power usage and solar power system size, and determine the costs and savings after any available rebates available in the user's state.
+
+## Installation and Running Solar App
+
+Download or clone this github repo and then run the below script from inside the directory to install the gem dependencies and run the app. 
+
+` bash run_app.sh `
+
+You may need to set execute permission on the script file first using chmod command on Linux and Mac (this isn't required on Windows):
+
+` chmod +x run_app.sh `
 
 ## Scope
 
