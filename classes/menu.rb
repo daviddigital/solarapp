@@ -84,6 +84,6 @@ class Menu
     # Ask the user if they'd like to perform another quote
     def continue()
         prompt = TTY::Prompt.new
-        prompt.yes?("What you like to calculate another solar quote?")
+        prompt.yes?("Would you like to calculate another solar quote?")
     end
 end
